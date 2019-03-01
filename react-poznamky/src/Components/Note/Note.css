@@ -1,0 +1,27 @@
+.poznamky{
+    padding: 10px;
+    text-align: left;
+}
+
+.card{
+    border-radius: 13px !important;
+    border: 0px !important;
+    -webkit-box-shadow: 3px 3px 12px 3px rgba(99,99,99,0.15);
+    -moz-box-shadow: 3px 3px 12px 3px rgba(99,99,99,0.15);
+    box-shadow: 3px 3px 12px 3px rgba(99,99,99,0.15);
+}
+.card:hover{
+    background-color: #fffeea;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card-header{
+    color: #87befd;
+    font-weight: bold;
+}
+
+.badge-secondary{
+    background-color: #87befd !important;
+    float: right;
+}
