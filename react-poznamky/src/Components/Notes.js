@@ -21,6 +21,7 @@ export default class Notes extends Component {
                 editNote={this.props.editNote}
                 getIndex={this.props.getIndex}
                 setIdContent={this.props.setIdContent}
+                getDate={this.props.getDate}
             />
 
         ));

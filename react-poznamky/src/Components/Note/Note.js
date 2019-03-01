@@ -16,7 +16,8 @@ export default class Note extends Component {
             editOpen: false,
             length: 0,
             title: "",
-            content: ""
+            content: "",
+            dateTime: this.props.getDate()
         };
 
         this.contentInput = React.createRef();
@@ -41,7 +42,7 @@ export default class Note extends Component {
                 <Card onClick={() => { this.toggle(); this.props.setIdContent(this.props.getIndex(id, this.props.notes, 'id')) }}>
                     <CardBody>
                         <CardTitle><b>{title}</b>
-                            <button type="button" className="close" aria-label="Close" onClick={this.props.remove.bind(this, id)}>
+                            <button type="button" className="close" aria-label="Close" onClick={() => { this.props.remove(id) }}>
                                 <span aria-hidden="true">×</span>
                             </button>
                         </CardTitle>
@@ -49,7 +50,8 @@ export default class Note extends Component {
                         <CardText>{content}</CardText>
                         <CardText>
                             <small className="text-muted">Posted {date}</small>
-                            <Badge color="secondary">New!</Badge>
+                            {date === this.state.dateTime ?
+                                <Badge color="secondary">New!</Badge> : <Badge color="warning">Note</Badge>}
                         </CardText>
                     </CardBody>
                 </Card>

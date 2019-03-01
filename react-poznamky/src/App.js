@@ -13,13 +13,16 @@ class App extends Component {
       { id: UUID.v4(), title: "Sample title", content: "With supporting text below as a natural lead-in to additional content.", date: "20. 2. 2019" },
       { id: UUID.v4(), title: "Title too", content: "Something really similar to the first one.", date: "21. 2. 2019" }
     ],
-    filteredNotes: [{ id: UUID.v4(), title: "Sample title", content: "With supporting text below as a natural lead-in to additional content.", date: "20. 2. 2019" },
-    { id: UUID.v4(), title: "Title too", content: "Something really similar to the first one.", date: "21. 2. 2019" }],
+    filteredNotes: [],
     newTitle: "",
     newContent: "",
     editModal: true,
     validInput: false,
     titleLength: 0,
+  }
+
+  componentDidMount() {
+    this.initFilteredNotes()
   }
 
   getDate = () => {
@@ -32,10 +35,14 @@ class App extends Component {
   init = () => {
     this.setState({ newContent: "", newTitle: "", validInput: false });
   }
+  initFilteredNotes = () => {
+    this.setState({
+      filteredNotes: [...this.state.notes]
+    })
+  }
 
   addNote = () => {
     /*console.log(this.state.newTitle);*/
-
     //if (this.state.validInput === true) {
     const newNote = {
       id: UUID.v4(),
@@ -43,26 +50,20 @@ class App extends Component {
       content: this.state.newContent,
       date: this.getDate()
     }
-    this.setState({ notes: [...this.state.notes, newNote], newContent: "", newTitle: "", validInput: false, filteredNotes: [...this.state.notes, newNote] });
+    this.setState({ notes: [...this.state.notes, newNote], newContent: "", newTitle: "", validInput: false, filteredNotes: [...this.state.filteredNotes, newNote] });
 
     //}
   }
 
   editNote = (index, id) => {
-    //ZDE ZAJISTIT EDIT PRES ID NE INDEX
-    /*const notes = {
-      ...this.state.notes[index]
-    };*/
-
+    //EDIT PRES ID
     this.setState({
       notes: [...this.state.notes.map(note => (note.id === id ? { ...note, title: this.state.newTitle, content: this.state.newContent, date: this.getDate() } : note))],
     });
-    //PRI EDITU POTREBUJU  ZAJISTIT ABY SE MI UPDATLI OBE POLE
-    const notesFilter = [...this.state.notes];
     this.setState({
-      filteredNotes: notesFilter
-    })
-
+      filteredNotes: [...this.state.filteredNotes.map(note => (note.id === id ? { ...note, title: this.state.newTitle, content: this.state.newContent, date: this.getDate() } : note))],
+    });
+    //PRI EDITU POTREBUJU  ZAJISTIT ABY SE MI UPDATLI OBE POLE
   }
 
   validate = () => {
@@ -83,12 +84,12 @@ class App extends Component {
     this.setState({ newContent: e.target.value })
   }
 
-  removeNote = (index) => {
+  removeNote = (id) => {
     this.setState({
-      notes: [...this.state.notes.filter(note => note.id !== index)]
+      notes: [...this.state.notes.filter(note => note.id !== id)]
     });
     this.setState({
-      filteredNotes: [...this.state.notes]
+      filteredNotes: [...this.state.filteredNotes.filter(note => note.id !== id)]
     });
   }
 
@@ -117,6 +118,7 @@ class App extends Component {
 
 
   render() {
+
     return (
       <div className="App">
         <Header
@@ -140,6 +142,7 @@ class App extends Component {
           editNote={this.editNote}
           getIndex={this.getIndex}
           setIdContent={this.setIdContent}
+          getDate={this.getDate}
         />
         <small id="endOL"> />End of list</small>
       </div >
@@ -149,4 +152,4 @@ class App extends Component {
 
 export default App;
 
-//PRI EDITU NEJDE MENIT DATA, VYRESIT NASTAVOVANI NEW TITLE A CONTENT kvuli validaci, přijmout zmenu editu, osetrit nejak graficky to ze nemuzu pridat prispevek 
+//RAZENI PODLE BADGŮ pridat BADGE V ADD NOTE NEBO HO EDITOVAT 
