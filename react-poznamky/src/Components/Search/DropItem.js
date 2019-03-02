@@ -6,7 +6,7 @@ export default class DropItem extends Component {
         const { categoryName } = this.props.category;
         return (
             <>
-                <DropdownItem tag="a" href="./">{categoryName}</DropdownItem>
+                <DropdownItem tag="a" onClick={this.props.onClickCategory}>{categoryName}</DropdownItem>
             </>
         )
     }

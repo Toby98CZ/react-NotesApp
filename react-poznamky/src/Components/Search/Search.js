@@ -10,6 +10,8 @@ export default class Search extends Component {
     }
 
 
+
+
     render() {
         return (
             <div id="inputSearch">
@@ -28,7 +30,7 @@ export default class Search extends Component {
                         </DropdownToggle>
                             <DropdownMenu>
                                 {this.props.categories.slice(0).reverse().map((category, index) => (
-                                    <DropItem category={category} name={category.categoryName} key={index} />
+                                    <DropItem category={category} name={category.categoryName} key={index} onClickCategory={this.props.onClickCategory} />
                                 ))}
                             </DropdownMenu>
                         </UncontrolledDropdown>

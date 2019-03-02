@@ -69,7 +69,6 @@ export default class Note extends Component {
                                     placeholder=". . ."
                                     defaultValue={title}
                                     onChange={(event) => { this.props.newTitle(event); this.props.validate(); this.getTitleLength(event) }}
-                                    ref={this.state.titleInput}
                                 />
                                 <FormText>Type 1-45 characters</FormText>
                             </FormGroup>
@@ -82,18 +81,16 @@ export default class Note extends Component {
                                     defaultValue={content}
                                     onChange={this.props.newContent}
                                     onLoad={this.getDataContent}
-                                    ref={this.state.contentInput}
                                 />
                             </FormGroup>
                             <FormGroup>
                                 <Label for="exampleEmail">Category/Badge</Label>
-                                <Badge color="warning">{this.state.badgeValue != "" ? this.state.badgeValue : "Note"/*ZDE CHYBA BADGE SE PRESNASTAVI SPATNE */}</Badge>
+                                <Badge color="warning">{this.state.badgeValue !== "" ? this.state.badgeValue : "Note"/*ZDE CHYBA BADGE SE PRESNASTAVI SPATNE */}</Badge>
                                 <Input
                                     type="text"
                                     placeholder=". . ."
                                     defaultValue={badge !== "Note" ? badge : ""}
                                     onChange={(event) => { this.props.newBadge(event); this.getBadgeValue(event) }} />
-
                                 <FormText>Keep empty for default</FormText>
                             </FormGroup>
                         </Form>

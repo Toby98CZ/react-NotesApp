@@ -14,7 +14,10 @@ class App extends Component {
       { id: UUID.v4(), title: "Title too", content: "Something really similar to the first one.", date: "21. 2. 2019", badge: "Note" }
     ],
     filteredNotes: [],
-    categories: [{ categoryName: "Note" }],
+    categories: [
+      { categoryName: "All" },
+      { categoryName: "Note" }
+    ],
     newTitle: "",
     newContent: "",
     newBadge: "",//////////BADGE
@@ -52,11 +55,24 @@ class App extends Component {
       date: this.getDate()
     }
     const newCategory = {
+
       categoryName: this.state.newBadge
     }
 
+    let categoryExists = false;
+
     this.setState({ notes: [...this.state.notes, newNote], filteredNotes: [...this.state.filteredNotes, newNote] });
-    this.setState(this.state.newBadge !== "" ? { categories: [...this.state.categories, newCategory] } : null)
+
+    //KONTROLA JEDNOTLIVYCH KATEGORII ZDA LI UZ TAKOVA NEEXISTUJE
+    this.state.categories.map(category => (category.categoryName === this.state.newBadge) ? categoryExists = true : null)
+    //POKUD NEEXISTUJE PRIDAM NOVOU KATEGORII
+    if (categoryExists === false) {
+      this.setState(
+        this.state.newBadge !== "" ? { categories: [...this.state.categories, newCategory] } : null
+      )
+    }
+    //INICIALIZUJU ZPET NA FALSE
+    categoryExists = false;
     this.init();
     //}
   }
@@ -73,6 +89,23 @@ class App extends Component {
         note => (note.id === id ? { ...note, title: this.state.newTitle, content: this.state.newContent, badge: this.state.newBadge !== "" ? this.state.newBadge : "Note", date: this.getDate() } : note)
       )],
     });
+
+    const newCategory = {
+      categoryName: this.state.newBadge
+    }
+    let categoryExists = false;
+    //KONTROLA JEDNOTLIVYCH KATEGORII ZDA LI UZ TAKOVA NEEXISTUJE
+    this.state.categories.map(category => (category.categoryName === this.state.newBadge) ? categoryExists = true : null)
+    //POKUD NEEXISTUJE PRIDAM NOVOU KATEGORII
+    if (categoryExists === false) {
+      this.setState(
+        this.state.newBadge !== "" ? { categories: [...this.state.categories, newCategory] } : null
+      )
+    }
+    //INICIALIZUJU ZPET NA FALSE
+    categoryExists = false;
+
+
     //NUTNOST PRIDAT NOVOU KATEGORII POKUD JI PRIDA NA EDIT
   }
 
@@ -118,6 +151,7 @@ class App extends Component {
     const note = { ...this.state.notes[index] };
     this.setState({ newTitle: note.title })
     this.setState({ newContent: note.content })
+    this.setState({ newBadge: note.badge })
   }
 
   searchEngine = (e) => {
@@ -126,6 +160,10 @@ class App extends Component {
     this.setState({
       filteredNotes: notesFilter.filter(note => note.title.includes(e.target.value))
     });
+  }
+
+  onClickCategory = (e) => {
+    console.log("test")
   }
 
 
@@ -142,7 +180,7 @@ class App extends Component {
           getValidation={this.state.validInput}
           validate={this.validate} />
 
-        <Search searchEngine={this.searchEngine} categories={this.state.categories} />
+        <Search searchEngine={this.searchEngine} categories={this.state.categories} onClickCategory={this.onClickCategory} />
 
         <Notes
           notes={this.state.filteredNotes.length !== this.state.notes.length ? this.state.filteredNotes : this.state.notes}

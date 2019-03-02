@@ -50,7 +50,7 @@ export default class Header extends React.Component {
 
                     <Nav className="ml-auto" navbar>
                         <NavItem>
-                            <a onClick={this.toggle} className="round-button">+</a>
+                            <a href="./" onClick={(e) => { e.preventDefault(); this.toggle() }} className="round-button">+</a>
                         </NavItem>
                     </Nav>
                 </Navbar>
@@ -71,7 +71,7 @@ export default class Header extends React.Component {
                             </FormGroup>
                             <FormGroup>
                                 <Label for="exampleEmail">Category/Badge</Label>
-                                <Badge color="warning">{this.state.badgeValue != "" ? this.state.badgeValue : "Note"}</Badge>
+                                <Badge color="warning">{this.state.badgeValue !== "" ? this.state.badgeValue : "Note"}</Badge>
                                 <Input
                                     type="text"
                                     placeholder=". . ."
