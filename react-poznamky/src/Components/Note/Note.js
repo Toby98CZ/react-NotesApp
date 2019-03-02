@@ -15,13 +15,9 @@ export default class Note extends Component {
         this.state = {
             editOpen: false,
             length: 0,
-            title: "",
-            content: "",
+            badgeValue: "",
             dateTime: this.props.getDate()
         };
-
-        this.contentInput = React.createRef();
-        this.titleInput = React.createRef();
     }
 
 
@@ -35,8 +31,12 @@ export default class Note extends Component {
         this.setState({ length: e.target.value.length })
     }
 
+    getBadgeValue = (e) => {
+        this.setState({ badgeValue: e.target.value })
+    }
+
     render() {
-        const { id, title, content, date } = this.props.note;
+        const { id, title, content, date, badge } = this.props.note;
         return (
             <div className="poznamky">
                 <Card onClick={() => { this.toggle(); this.props.setIdContent(this.props.getIndex(id, this.props.notes, 'id')) }}>
@@ -51,7 +51,8 @@ export default class Note extends Component {
                         <CardText>
                             <small className="text-muted">Posted {date}</small>
                             {date === this.state.dateTime ?
-                                <Badge color="secondary">New!</Badge> : <Badge color="warning">Note</Badge>}
+                                <Badge color="secondary">New!</Badge> : <></>}
+                            <Badge color="warning">{badge}</Badge>
                         </CardText>
                     </CardBody>
                 </Card>
@@ -83,6 +84,17 @@ export default class Note extends Component {
                                     onLoad={this.getDataContent}
                                     ref={this.state.contentInput}
                                 />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="exampleEmail">Category/Badge</Label>
+                                <Badge color="warning">{this.state.badgeValue != "" ? this.state.badgeValue : "Note"/*ZDE CHYBA BADGE SE PRESNASTAVI SPATNE */}</Badge>
+                                <Input
+                                    type="text"
+                                    placeholder=". . ."
+                                    defaultValue={badge !== "Note" ? badge : ""}
+                                    onChange={(event) => { this.props.newBadge(event); this.getBadgeValue(event) }} />
+
+                                <FormText>Keep empty for default</FormText>
                             </FormGroup>
                         </Form>
 

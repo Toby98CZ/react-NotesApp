@@ -5,7 +5,7 @@ import {
     Nav,
     NavItem,
     Modal, ModalHeader, ModalBody, ModalFooter,
-    Button, Form, FormGroup, Label, Input, FormText
+    Button, Form, FormGroup, Label, Input, FormText, Badge
 } from 'reactstrap';
 //import { throws } from 'assert';
 
@@ -14,10 +14,15 @@ export default class Header extends React.Component {
         super(props);
         this.state = {
             modal: false,
-            length: 0
+            length: 0,
+            badgeValue: "Note"
         };
 
         this.toggle = this.toggle.bind(this);
+    }
+
+    initBadge = () => {
+        this.setState({ badgeValue: "Note" })
     }
 
     toggle() {
@@ -26,10 +31,15 @@ export default class Header extends React.Component {
             length: 0
         }));
         this.props.init();
+        this.initBadge();
     }
 
     getTitleLength = (e) => {
         this.setState({ length: e.target.value.length })
+    }
+
+    getBadgeValue = (e) => {
+        this.setState({ badgeValue: e.target.value })
     }
 
     render() {
@@ -58,6 +68,16 @@ export default class Header extends React.Component {
                                 <Label for="exampleText">Content</Label>
                                 <Input type="textarea" name="text" id="exampleText" onChange={this.props.newContent} />
                                 <FormText>This area can be empty</FormText>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="exampleEmail">Category/Badge</Label>
+                                <Badge color="warning">{this.state.badgeValue != "" ? this.state.badgeValue : "Note"}</Badge>
+                                <Input
+                                    type="text"
+                                    placeholder=". . ."
+                                    onChange={(event) => { this.props.newBadge(event); this.getBadgeValue(event) }} />
+
+                                <FormText>Keep empty for default</FormText>
                             </FormGroup>
                         </Form>
 

@@ -10,12 +10,14 @@ import UUID from 'uuid'
 class App extends Component {
   state = {
     notes: [
-      { id: UUID.v4(), title: "Sample title", content: "With supporting text below as a natural lead-in to additional content.", date: "20. 2. 2019" },
-      { id: UUID.v4(), title: "Title too", content: "Something really similar to the first one.", date: "21. 2. 2019" }
+      { id: UUID.v4(), title: "Sample title", content: "With supporting text below as a natural lead-in to additional content.", date: "20. 2. 2019", badge: "Note" },
+      { id: UUID.v4(), title: "Title too", content: "Something really similar to the first one.", date: "21. 2. 2019", badge: "Note" }
     ],
     filteredNotes: [],
+    categories: [{ categoryName: "Note" }],
     newTitle: "",
     newContent: "",
+    newBadge: "",//////////BADGE
     editModal: true,
     validInput: false,
     titleLength: 0,
@@ -26,14 +28,14 @@ class App extends Component {
   }
 
   getDate = () => {
-    var date = new Date().getDate(); //Current Date
+    var day = new Date().getDate(); //Current Day
     var month = new Date().getMonth() + 1; //Current Month
     var year = new Date().getFullYear(); //Current Year
-    return date + '. ' + month + '. ' + year;
+    return day + '. ' + month + '. ' + year;
   }
 
   init = () => {
-    this.setState({ newContent: "", newTitle: "", validInput: false });
+    this.setState({ newContent: "", newTitle: "", newBadge: "", validInput: false });
   }
   initFilteredNotes = () => {
     this.setState({
@@ -42,28 +44,36 @@ class App extends Component {
   }
 
   addNote = () => {
-    /*console.log(this.state.newTitle);*/
-    //if (this.state.validInput === true) {
     const newNote = {
       id: UUID.v4(),
       title: this.state.newTitle,
       content: this.state.newContent,
+      badge: this.state.newBadge === "" ? "Note" : this.state.newBadge,
       date: this.getDate()
     }
-    this.setState({ notes: [...this.state.notes, newNote], newContent: "", newTitle: "", validInput: false, filteredNotes: [...this.state.filteredNotes, newNote] });
+    const newCategory = {
+      categoryName: this.state.newBadge
+    }
 
+    this.setState({ notes: [...this.state.notes, newNote], filteredNotes: [...this.state.filteredNotes, newNote] });
+    this.setState(this.state.newBadge !== "" ? { categories: [...this.state.categories, newCategory] } : null)
+    this.init();
     //}
   }
 
   editNote = (index, id) => {
     //EDIT PRES ID
     this.setState({
-      notes: [...this.state.notes.map(note => (note.id === id ? { ...note, title: this.state.newTitle, content: this.state.newContent, date: this.getDate() } : note))],
+      notes: [...this.state.notes.map(
+        note => (note.id === id ? { ...note, title: this.state.newTitle, content: this.state.newContent, badge: this.state.newBadge !== "" ? this.state.newBadge : "Note", date: this.getDate() } : note)
+      )],
     });
     this.setState({
-      filteredNotes: [...this.state.filteredNotes.map(note => (note.id === id ? { ...note, title: this.state.newTitle, content: this.state.newContent, date: this.getDate() } : note))],
+      filteredNotes: [...this.state.filteredNotes.map(
+        note => (note.id === id ? { ...note, title: this.state.newTitle, content: this.state.newContent, badge: this.state.newBadge !== "" ? this.state.newBadge : "Note", date: this.getDate() } : note)
+      )],
     });
-    //PRI EDITU POTREBUJU  ZAJISTIT ABY SE MI UPDATLI OBE POLE
+    //NUTNOST PRIDAT NOVOU KATEGORII POKUD JI PRIDA NA EDIT
   }
 
   validate = () => {
@@ -76,14 +86,16 @@ class App extends Component {
 
   getNewTitle = (e) => {
     this.setState({ newTitle: e.target.value })
-    this.setState({ titleLength: e.target.value.length })
+    /*this.setState({ titleLength: e.target.value.length })
     let length = e.target.value.length;
-    console.log(length)
+    console.log(length)*/
   }
   getNewContent = (e) => {
     this.setState({ newContent: e.target.value })
   }
-
+  getNewBadge = (e) => {
+    this.setState({ newBadge: e.target.value })
+  }
   removeNote = (id) => {
     this.setState({
       notes: [...this.state.notes.filter(note => note.id !== id)]
@@ -126,10 +138,11 @@ class App extends Component {
           init={this.init}
           newTitle={this.getNewTitle}
           newContent={this.getNewContent}
+          newBadge={this.getNewBadge}
           getValidation={this.state.validInput}
           validate={this.validate} />
 
-        <Search searchEngine={this.searchEngine} />
+        <Search searchEngine={this.searchEngine} categories={this.state.categories} />
 
         <Notes
           notes={this.state.filteredNotes.length !== this.state.notes.length ? this.state.filteredNotes : this.state.notes}
@@ -138,6 +151,7 @@ class App extends Component {
           getValidation={this.state.validInput}
           newContent={this.getNewContent}
           newTitle={this.getNewTitle}
+          newBadge={this.getNewBadge}
           validate={this.validate}
           editNote={this.editNote}
           getIndex={this.getIndex}
